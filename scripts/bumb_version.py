@@ -59,12 +59,14 @@ def update_changelog(next_version):
 
     changelog_path = os.path.join(REPO_DIR, CHANGELOG_NAME)
     last_version, _ = run("git", "-C", REPO_DIR, "rev-list", "--date-order", "--tags", "--max-count=1")
-    stdout, stderr = run("git", "-C", REPO_DIR, "diff", last_version, "HEAD", "--", CHANGELOG_NAME)
 
-    if len(stderr) > 0:
-        error(stderr.strip())
-    if len(stdout) == 0:
-        error("no changes have been made to the changelog")
+    if len(last_version) > 0:
+        stdout, stderr = run("git", "-C", REPO_DIR, "diff", last_version, "HEAD", "--", CHANGELOG_NAME)
+
+        if len(stderr) > 0:
+            error(stderr.strip())
+        if len(stdout) == 0:
+            error("no changes have been made to the changelog")
 
     with open(changelog_path, "r") as f:
         content = f.read()
