@@ -1,4 +1,4 @@
 [package]
 name = "game-box"
-version = "0.0.1"
+version = "0.0.0"
 edition = "2021"

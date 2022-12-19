@@ -1,0 +1,112 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bumpVersion:
+        description: "Bump version"
+        required: true
+        default: patch
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_VERSION: 1.66.0
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bv.outputs.new_version }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Prepare branch
+      run: |
+        if [[ ! `git branch --show-current` = 'master' ]] ; then
+          echo "Releases can only be created from the \`master\` branch" >&2
+          exit 1
+        fi
+        git fetch --tags
+        git checkout -b feature
+    - name: Bump version
+      id: bv
+      run: |
+        new_version=`scripts/bumb_version.py ${{ inputs.bumpVersion }}`
+        echo "new_version=$new_version" >> $GITHUB_OUTPUT
+    - name: Update lock file
+      uses: actions-rs/cargo@v1
+      with:
+        command: update
+        args: --package hoc
+    - name: Create release branch
+      id: crb
+      run: |
+        release_branch="release/v${NEW_VERSION}"
+        git checkout -b "$release_branch"
+        git \
+          -c author.name=${{ github.actor }} \
+          -c author.email=${{ github.actor }}@users.noreply.github.com \
+          -c committer.name=Github \
+          -c committer.email=noreply@github.com \
+          commit -a -m "Prepare release v${NEW_VERSION}"
+        git push --set-upstream origin "$release_branch"
+        echo "release_branch=$release_branch" >> $GITHUB_OUTPUT
+      env:
+        NEW_VERSION: ${{ steps.bv.outputs.new_version }}
+    - name: Create pull request
+      id: cpr
+      uses: octokit/request-action@v2.x
+      with:
+        route: POST /repos/${{ github.repository }}/pulls
+        title: Release v${{ env.NEW_VERSION }}
+        body: Bump to version v${{ env.NEW_VERSION }}.
+        base: master
+        head: ${{ env.RELEASE_BRANCH }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_BRANCH: ${{ steps.crb.outputs.release_branch }}
+        NEW_VERSION: ${{ steps.bv.outputs.new_version }}
+    - name: Merge pull request
+      uses: octokit/request-action@v2.x
+      with:
+        route: PUT /repos/${{ github.repository }}/pulls/${{ env.PULL_NUMBER }}/merge
+        commit_title: Prepare release v${{ env.NEW_VERSION }} (#${{ env.PULL_NUMBER }})
+        merge_method: squash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_NUMBER: ${{ fromJson(steps.cpr.outputs.data).number }}
+        NEW_VERSION: ${{ steps.bv.outputs.new_version }}
+
+  create_release:
+    needs: [bump_version]
+    env:
+      NEW_VERSION: ${{ needs.bump_version.outputs.new_version }}
+      ARTIFACT_NAME: ${{ needs.build.outputs.artifact_name }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: master
+    - name: Get changelog
+      id: gcb
+      run: |
+        changelog_body=`scripts/get_changelog.py`
+        echo "changelog_body=${changelog_body}" >> $GITHUB_OUTPUT
+    - name: Publish release
+      id: crd
+      uses: octokit/request-action@v2.x
+      with:
+        route: POST /repos/${{ github.repository }}/releases
+        tag_name: v${{ env.NEW_VERSION }}
+        target_commitish: master
+        name: v${{ env.NEW_VERSION }}
+        body: |-
+          ${{ steps.gcb.outputs.changelog_body }}
+        draft: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
