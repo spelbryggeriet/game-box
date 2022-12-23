@@ -20,7 +20,7 @@ env:
 
 jobs:
   bump_version:
-    if: ${{ inputs.bumpVersion }} != ''
+    if: ${{ inputs.bumpVersion }} != 'skip'
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.bv.outputs.new_version }}
