@@ -51,7 +51,7 @@ def update_manifest(bump_comp_idx, path):
     return next_version
 
 
-def update_changelog(next_version):
+def update_changelog(next_version, repository_owner):
     HEADER_KEY = "## [Unreleased]"
     CHANGELOG_NAME = "CHANGELOG.md"
 
@@ -79,21 +79,23 @@ def update_changelog(next_version):
     if new_content != new_content.replace(HEADER_KEY, replacement):
         error("multiple unreleased version sections found")
 
-    new_content = new_content.replace(replacement, f"{HEADER_KEY}\n\n{replacement}")
+    new_content = new_content.replace(replacement, f"{HEADER_KEY}\n\nImage tag: ghcr.io/{repository_owner}/game-box-backend:{next_version}\n\n{replacement}")
     with open(changelog_path, "w") as f:
         f.write(new_content)
 
 
-def bump_version(bump_comp_idx):
+def bump_version(bump_comp_idx, repository_owner):
     next_version = update_manifest(bump_comp_idx, "frontend/Cargo.toml")
     update_manifest(bump_comp_idx, "backend/Cargo.toml")
-    update_changelog(next_version)
+    update_changelog(next_version, repository_owner)
     return next_version
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         error("component argument missing")
+    if len(sys.argv) < 3:
+        error("repository owner argument missing")
 
     component = sys.argv[1]
     if component == "major":
@@ -105,4 +107,4 @@ if __name__ == "__main__":
     else:
         error(f'"major", "minor" or "patch" expected')
 
-    print(bump_version(bump_comp_idx))
+    print(bump_version(bump_comp_idx, sys.argv[2]))

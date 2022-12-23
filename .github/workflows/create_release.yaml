@@ -38,7 +38,7 @@ jobs:
     - name: Bump version
       if: inputs.bumpVersion != 'skip'
       run: |
-        scripts/bumb_version.py ${{ inputs.bumpVersion }}
+        scripts/bumb_version.py ${{ inputs.bumpVersion }} ${{ github.repository_owner }}
     - name: Get version
       id: gv
       run: |
@@ -81,6 +81,7 @@ jobs:
         RELEASE_BRANCH: ${{ steps.crb.outputs.release_branch }}
         VERSION: ${{ steps.gv.outputs.version }}
     - name: Get pull request number
+      if: inputs.bumpVersion != 'skip'
       id: gprn
       uses: sergeysova/jq-action@v2
       with:
@@ -104,8 +105,6 @@ jobs:
     env:
       VERSION: ${{ needs.prepare_version.outputs.version }}
     runs-on: ubuntu-latest
-    outputs:
-      artifact_name: ${{ steps.za.outputs.artifact_name }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -129,7 +128,6 @@ jobs:
     needs: [prepare_version, build]
     env:
       VERSION: ${{ needs.prepare_version.outputs.version }}
-      ARTIFACT_NAME: ${{ needs.build.outputs.artifact_name }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -139,7 +137,7 @@ jobs:
     - name: Get changelog
       id: gcb
       run: |
-        changelog_body=`echo "Image tag: ghcr.io/${{ github.repository_owner }}/game-box-backend:${VERSION}\n\n" && scripts/get_changelog.py`
+        changelog_body=`scripts/get_changelog.py`
         echo "changelog_body=${changelog_body}" >> $GITHUB_OUTPUT
     - name: Publish release
       id: crd
