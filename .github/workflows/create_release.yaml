@@ -6,7 +6,7 @@ on:
       bumpVersion:
         description: "Bump version"
         required: true
-        default: skip
+        default: patch
         type: choice
         options:
         - skip
@@ -80,6 +80,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RELEASE_BRANCH: ${{ steps.crb.outputs.release_branch }}
         VERSION: ${{ steps.gv.outputs.version }}
+    - name: Get pull request number
+      id: gprn
+      uses: sergeysova/jq-action@v2
+      with:
+        cmd: echo "${{ env.JSON_DATA }}" | jq .number -r
+      env:
+        JSON_DATA: ${{ steps.cpr.outputs.data }}
     - name: Merge pull request
       if: inputs.bumpVersion != 'skip'
       uses: octokit/request-action@v2.x
@@ -89,7 +96,7 @@ jobs:
         merge_method: squash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PULL_NUMBER: ${{ fromJson(steps.cpr.outputs.data).number }}
+        PULL_NUMBER: ${{ steps.gprn.outputs.value }}
         VERSION: ${{ steps.gv.outputs.version }}
 
   build:
