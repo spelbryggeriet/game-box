@@ -108,7 +108,7 @@ jobs:
         cache-to: type=gha,mode=max
 
   create_release:
-    needs: [bump_version]
+    needs: [bump_version, build]
     env:
       NEW_VERSION: ${{ needs.bump_version.outputs.new_version }}
       ARTIFACT_NAME: ${{ needs.build.outputs.artifact_name }}
