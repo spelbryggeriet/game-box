@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Tic-tac-toe. You can play against another human player how many times you like.
+
 ## [0.0.1] - 2022-12-19
 
 ### Added
