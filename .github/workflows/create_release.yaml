@@ -5,10 +5,11 @@ on:
     inputs:
       bumpVersion:
         description: "Bump version"
-        required: false
-        default: ''
+        required: true
+        default: skip
         type: choice
         options:
+        - skip
         - patch
         - minor
         - major
