@@ -62,7 +62,7 @@ COPY ./frontend/src ./src
 
 # Build for release
 RUN rm ./target/wasm32-unknown-unknown/release/deps/game_box_frontend*
-RUN trunk build --release 
+RUN trunk build --release
 
 ###############################################################################
 # Final stage                                                                 #
@@ -74,4 +74,5 @@ COPY --from=build-backend /backend/target/armv7-unknown-linux-gnueabihf/release/
 COPY --from=build-frontend /frontend/dist /serve/static
 
 # Run the binary
-CMD ["/serve/game-box-backend", "/serve/static"]
+ENV GAME_BOX_STATIC_DIR=/serve/static
+CMD ["/serve/game-box-backend"]
