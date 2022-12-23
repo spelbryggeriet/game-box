@@ -574,14 +574,14 @@ dependencies = [
 
 [[package]]
 name = "game-box-backend"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "rocket",
 ]
 
 [[package]]
 name = "game-box-frontend"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "dioxus",
  "getrandom",
