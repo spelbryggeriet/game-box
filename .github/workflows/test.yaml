@@ -9,6 +9,8 @@ on:
     - '.gitignore'
     - '.github/**'
     - '!.github/workflows/test.yml'
+    - 'Dockerfile'
+    - 'frontend/index.html'
   pull_request:
     branches: [ master ]
     paths-ignore:
@@ -17,6 +19,8 @@ on:
     - '.gitignore'
     - '.github/**'
     - '!.github/workflows/test.yml'
+    - 'Dockerfile'
+    - 'frontend/index.html'
 
 env:
   CARGO_TERM_COLOR: always
