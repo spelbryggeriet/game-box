@@ -6,7 +6,7 @@ on:
       bumpVersion:
         description: "Bump version"
         required: false
-        default: patch
+        default: ''
         type: choice
         options:
         - patch
