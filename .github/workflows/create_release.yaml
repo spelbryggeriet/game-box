@@ -5,7 +5,7 @@ on:
     inputs:
       bumpVersion:
         description: "Bump version"
-        required: true
+        required: false
         default: patch
         type: choice
         options:
@@ -19,6 +19,7 @@ env:
 
 jobs:
   bump_version:
+    if: ${{ inputs.bumpVersion }} != ''
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.bv.outputs.new_version }}
