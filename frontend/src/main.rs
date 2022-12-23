@@ -12,11 +12,9 @@ use std::task::Poll;
 use std::task::Waker;
 
 use dioxus::{core::to_owned, prelude::*};
-use fermi::prelude::*;
 use rand::prelude::*;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::Window;
 
 use model::{CellGrid, CellShape};
 
@@ -35,6 +33,7 @@ fn sleep(timeout_ms: i32) -> SetTimeout {
         waker_clone
             .read()
             .expect("thread should not be poisoned")
+            .as_ref()
             .expect("waker should be set")
             .wake_by_ref()
     });
