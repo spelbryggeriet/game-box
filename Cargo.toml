@@ -1,4 +1,3 @@
-[package]
-name = "game-box"
-version = "0.0.1"
-edition = "2021"
+[workspace]
+members = ["frontend", "backend"]
+

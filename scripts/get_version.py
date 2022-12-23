@@ -25,7 +25,7 @@ def get_version(content = None):
     NEW_LINE = "\n"
 
     if content is None:
-        manifest_path = os.path.join(REPO_DIR, "Cargo.toml")
+        manifest_path = os.path.join(REPO_DIR, "frontend/Cargo.toml")
         with open(manifest_path, "r") as f:
             content = f.read()
 

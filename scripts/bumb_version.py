@@ -36,16 +36,14 @@ def get_next_version(bump_comp_idx, current_version):
     return f"{major}.{minor}.{patch}"
 
 
-def update_manifest(bump_comp_idx):
-    manifest_path = os.path.join(REPO_DIR, "Cargo.toml")
+def update_manifest(bump_comp_idx, path):
+    manifest_path = os.path.join(REPO_DIR, path)
     with open(manifest_path, "r") as f:
         content = f.read()
 
     current_version = get_current_version(content)
     next_version = get_next_version(bump_comp_idx, current_version)
-    content = content.replace(
-        f'version = "{current_version}"',
-        f'version = "{next_version}"')
+    content = content.replace(f'version = "{current_version}"', f'version = "{next_version}"', 1)
 
     with open(manifest_path, "w") as f:
         f.write(content)
@@ -87,7 +85,8 @@ def update_changelog(next_version):
 
 
 def bump_version(bump_comp_idx):
-    next_version = update_manifest(bump_comp_idx)
+    next_version = update_manifest(bump_comp_idx, "frontend/Cargo.toml")
+    update_manifest(bump_comp_idx, "backend/Cargo.toml")
     update_changelog(next_version)
     return next_version
 

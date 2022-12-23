@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.board {
+  position: relative;
+  top: max(12.5vh, calc(50vh - min(37.5vh, 37.5vw)));
+
+  margin: 0 auto;
+
+  /* Sizing */
+  width: min(75vh, 75vw);
+  aspect-ratio: 1;
+}
+
+.board .cells {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.board .cells .cell {
+  position: relative;
+  aspect-ratio: 1;
+  margin: 10%;
+}
+
+.line {
+  position: absolute;
+  background: black;
+
+  clip-path: inset(0 0 0 0);
+
+  transition: clip-path ease-in-out;
+}
+
+.line.hidden {
+  clip-path: inset(0 100% 0 0);
+}
+
+.circle {
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 1;
+
+  background: transparent;
+  border: 15px solid black;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.circle + svg {
+  display: block;
+  margin: -5%;
+  width: 110%;
+  aspect-ratio: 1;
+}
+
+.circle + svg circle {
+  cx: 50;
+  cy: 50;
+
+  fill: none;
+  stroke: white;
+  stroke-width: 50;
+  stroke-dasharray: 157;
+  stroke-dashoffset: 157;
+
+  transition: stroke-dashoffset ease-in-out;
+}
+
+.circle.hidden + svg circle {
+  stroke-dashoffset: 0;
+}
+</style>
+  </head>
+  <body>
+    <div id="main"></div>
+  </body>
+</html>
