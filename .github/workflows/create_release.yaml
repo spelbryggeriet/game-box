@@ -38,7 +38,7 @@ jobs:
     - name: Bump version
       if: inputs.bumpVersion != 'skip'
       run: |
-        scripts/bumb_version.py ${{ inputs.bumpVersion }} ${{ github.repository_owner }}
+        scripts/bump_version.py ${{ inputs.bumpVersion }} ${{ github.repository_owner }}
     - name: Get version
       id: gv
       run: |
@@ -85,7 +85,7 @@ jobs:
       id: gprn
       uses: sergeysova/jq-action@v2
       with:
-        cmd: echo "${{ env.JSON_DATA }}" | jq .number -r
+        cmd: echo '${{ steps.cpr.outputs.data }}' | jq .number -r
       env:
         JSON_DATA: ${{ steps.cpr.outputs.data }}
     - name: Merge pull request
