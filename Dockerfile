@@ -69,6 +69,9 @@ RUN trunk build --release
 ###############################################################################
 FROM --platform=linux/arm64/v8 debian:buster-slim
 
+# Copy server config
+COPY ./backend/Rocket.toml /serve/Rocket.toml
+
 # Copy from the previous builds
 COPY --from=build-backend /backend/target/aarch64-unknown-linux-gnu/release/game-box-backend /serve/game-box-backend
 COPY --from=build-frontend /frontend/dist /serve/static
