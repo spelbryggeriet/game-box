@@ -45,6 +45,17 @@ def update_version_file(next_version, path):
 
 
 def update_manifest(next_version, path, current_version):
+    hocfile_path = os.path.join(REPO_DIR, path)
+    with open(hocfile_path, "r") as f:
+        content = f.read()
+
+    content = content.replace(f'version: "{current_version}"', f'version: "{next_version}"', 1)
+
+    with open(hocfile_path, "w") as f:
+        f.write(content)
+
+
+def update_manifest(next_version, path, current_version):
     manifest_path = os.path.join(REPO_DIR, path)
     with open(manifest_path, "r") as f:
         content = f.read()
@@ -92,6 +103,7 @@ def bump_version(bump_comp_idx, repository_owner):
     next_version = get_next_version(bump_comp_idx, current_version)
 
     update_version_file(next_version, "VERSION")
+    update_hocfile(next_version, "hocfile.yaml", current_version)
     update_manifest(next_version, "frontend/Cargo.toml", current_version)
     update_manifest(next_version, "backend/Cargo.toml", current_version)
     update_changelog(next_version, "CHANGELOG.md", repository_owner)
