@@ -5,24 +5,26 @@ on:
     branches: [ master ]
     paths-ignore:
     - '**.md'
-    - 'scripts/**'
-    - '.gitignore'
     - '.github/**'
-    - '!.github/workflows/test.yml'
+    - '.gitignore'
     - 'Dockerfile'
-    - 'hocfile.yaml'
+    - 'backend/Rocket.html'
     - 'frontend/index.html'
+    - 'hocfile.yaml'
+    - 'scripts/**'
+    - '!.github/workflows/test.yml'
   pull_request:
     branches: [ master ]
     paths-ignore:
     - '**.md'
-    - 'scripts/**'
-    - '.gitignore'
     - '.github/**'
-    - '!.github/workflows/test.yml'
+    - '.gitignore'
     - 'Dockerfile'
-    - 'hocfile.yaml'
+    - 'backend/Rocket.html'
     - 'frontend/index.html'
+    - 'hocfile.yaml'
+    - 'scripts/**'
+    - '!.github/workflows/test.yml'
 
 env:
   CARGO_TERM_COLOR: always
