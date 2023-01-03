@@ -44,7 +44,7 @@ def update_version_file(next_version, path):
     return next_version
 
 
-def update_manifest(next_version, path, current_version):
+def update_hocfile(next_version, path, current_version):
     hocfile_path = os.path.join(REPO_DIR, path)
     with open(hocfile_path, "r") as f:
         content = f.read()
