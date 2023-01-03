@@ -49,7 +49,7 @@ def update_hocfile(next_version, path, current_version):
     with open(hocfile_path, "r") as f:
         content = f.read()
 
-    content = content.replace(f'version: "{current_version}"', f'version: "{next_version}"', 1)
+    content = content.replace(f'version: {current_version}', f'version: {next_version}', 1)
 
     with open(hocfile_path, "w") as f:
         f.write(content)
