@@ -78,4 +78,5 @@ COPY --from=build-frontend /frontend/dist /serve/static
 
 # Run the binary
 ENV GAME_BOX_STATIC_DIR=/serve/static
+ENV ROCKET_CONFIG=/serve/Rocket.toml
 CMD ["/serve/game-box-backend"]
