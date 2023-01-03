@@ -28,7 +28,7 @@ def get_next_version(bump_comp_idx, current_version):
     all_components_are_ints = all(map(is_int, components))
 
     if not (has_three_components and all_components_are_ints):
-        error(f'"{version}" version number invalid')
+        error(f'"{current_version}" version number invalid')
 
     components[bump_comp_idx] = int(components[bump_comp_idx]) + 1
     [major, minor, patch] = [*components[:bump_comp_idx+1], 0, 0, 0][:3]
@@ -36,30 +36,33 @@ def get_next_version(bump_comp_idx, current_version):
     return f"{major}.{minor}.{patch}"
 
 
-def update_manifest(bump_comp_idx, path):
+def update_version_file(next_version, path):
+    version_path = os.path.join(REPO_DIR, path)
+    with open(version_path, "w") as f:
+        f.write(next_version)
+
+    return next_version
+
+
+def update_manifest(next_version, path, current_version):
     manifest_path = os.path.join(REPO_DIR, path)
     with open(manifest_path, "r") as f:
         content = f.read()
 
-    current_version = get_current_version(content)
-    next_version = get_next_version(bump_comp_idx, current_version)
     content = content.replace(f'version = "{current_version}"', f'version = "{next_version}"', 1)
 
     with open(manifest_path, "w") as f:
         f.write(content)
 
-    return next_version
 
-
-def update_changelog(next_version, repository_owner):
+def update_changelog(next_version, path, repository_owner):
     HEADER_KEY = "## [Unreleased]"
-    CHANGELOG_NAME = "CHANGELOG.md"
 
-    changelog_path = os.path.join(REPO_DIR, CHANGELOG_NAME)
+    changelog_path = os.path.join(REPO_DIR, path)
     last_version, _ = run("git", "-C", REPO_DIR, "rev-list", "--date-order", "--tags", "--max-count=1")
 
     if len(last_version) > 0:
-        stdout, stderr = run("git", "-C", REPO_DIR, "diff", last_version, "HEAD", "--", CHANGELOG_NAME)
+        stdout, stderr = run("git", "-C", REPO_DIR, "diff", last_version, "HEAD", "--", path)
 
         if len(stderr) > 0:
             error(stderr.strip())
@@ -85,9 +88,14 @@ def update_changelog(next_version, repository_owner):
 
 
 def bump_version(bump_comp_idx, repository_owner):
-    next_version = update_manifest(bump_comp_idx, "frontend/Cargo.toml")
-    update_manifest(bump_comp_idx, "backend/Cargo.toml")
-    update_changelog(next_version, repository_owner)
+    current_version = get_current_version()
+    next_version = get_next_version(bump_comp_idx, current_version)
+
+    update_version_file(next_version, "VERSION")
+    update_manifest(next_version, "frontend/Cargo.toml", current_version)
+    update_manifest(next_version, "backend/Cargo.toml", current_version)
+    update_changelog(next_version, "CHANGELOG.md", repository_owner)
+
     return next_version
 
 
