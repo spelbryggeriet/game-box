@@ -1,0 +1,4 @@
+name: game-box
+version: 0.1.0
+imageName: game-box-backend
+domain: gamebox.murkydungeon.se
