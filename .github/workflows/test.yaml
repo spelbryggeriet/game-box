@@ -4,27 +4,23 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-    - '**.md'
-    - '.github/**'
-    - '.gitignore'
-    - 'Dockerfile'
-    - 'backend/Rocket.html'
-    - 'frontend/index.html'
-    - 'hocfile.yaml'
-    - 'scripts/**'
-    - '!.github/workflows/test.yml'
+    - '*'
+    - '!./Cargo.lock'
+    - '!./backend/Cargo.toml'
+    - '!./backend/src'
+    - '!./frontend/Cargo.toml'
+    - '!./frontend/src'
+    - '!./.github/workflows/test.yml'
   pull_request:
     branches: [ master ]
     paths-ignore:
-    - '**.md'
-    - '.github/**'
-    - '.gitignore'
-    - 'Dockerfile'
-    - 'backend/Rocket.html'
-    - 'frontend/index.html'
-    - 'hocfile.yaml'
-    - 'scripts/**'
-    - '!.github/workflows/test.yml'
+    - '*'
+    - '!./Cargo.lock'
+    - '!./backend/Cargo.toml'
+    - '!./backend/src'
+    - '!./frontend/Cargo.toml'
+    - '!./frontend/src'
+    - '!./.github/workflows/test.yml'
 
 env:
   CARGO_TERM_COLOR: always
