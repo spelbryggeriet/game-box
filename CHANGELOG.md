@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+Image tag: ghcr.io/spelbryggeriet/game-box-backend:0.1.1
+
+## [0.1.1] - 2023-01-03
+
 ### Changed
 
 - Backend Docker image is now built for `aarch64` instead of `armv7`.
