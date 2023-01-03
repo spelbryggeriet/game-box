@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Backend config is now correctly used to the Docker image.
+
 ## [0.1.3] - 2023-01-03
 
 Image tag: ghcr.io/spelbryggeriet/game-box-backend:0.1.3
