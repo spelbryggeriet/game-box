@@ -5,7 +5,7 @@ FROM rust:1.66 as build-backend
 
 # Install dependencies
 RUN apt update
-RUN apt install -y gcc-arm-linux-gnueabihf
+RUN apt install -y gcc-aarch64-linux-gnu
 
 # Create a new empty project for the backend
 RUN USER=root cargo new --bin backend
@@ -13,25 +13,25 @@ WORKDIR /backend
 
 # Create cargo config for setting the linker command
 RUN mkdir ./.cargo
-RUN echo "[target.armv7-unknown-linux-gnueabihf]\nlinker = \"arm-linux-gnueabihf-gcc\"" > ./.cargo/config
+RUN echo "[target.aarch64-unknown-linux-gnu]\nlinker = \"aarch64-linux-gnu-gcc\"" > ./.cargo/config
 
 # Copy our manifests
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./backend/Cargo.toml ./Cargo.toml
 
 # Add target
-RUN rustup target add armv7-unknown-linux-gnueabihf
+RUN rustup target add aarch64-unknown-linux-gnu
 
 # Build only the dependencies to cache them
-RUN cargo build --release --target armv7-unknown-linux-gnueabihf
+RUN cargo build --release --target aarch64-unknown-linux-gnu
 RUN rm src/*.rs
 
 # Copy the source code
 COPY ./backend/src ./src
 
 # Build for release
-RUN rm ./target/armv7-unknown-linux-gnueabihf/release/deps/game_box_backend*
-RUN cargo build --release --target armv7-unknown-linux-gnueabihf
+RUN rm ./target/aarch64-unknown-linux-gnu/release/deps/game_box_backend*
+RUN cargo build --release --target aarch64-unknown-linux-gnu
 
 ###############################################################################
 # Frontend building stage                                                     #
@@ -67,10 +67,10 @@ RUN trunk build --release
 ###############################################################################
 # Final stage                                                                 #
 ###############################################################################
-FROM debian:buster-slim
+FROM --platform=linux/arm64/v8 debian:buster-slim
 
 # Copy from the previous builds
-COPY --from=build-backend /backend/target/armv7-unknown-linux-gnueabihf/release/game-box-backend /serve/game-box-backend
+COPY --from=build-backend /backend/target/aarch64-unknown-linux-gnu/release/game-box-backend /serve/game-box-backend
 COPY --from=build-frontend /frontend/dist /serve/static
 
 # Run the binary
