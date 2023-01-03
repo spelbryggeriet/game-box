@@ -7,9 +7,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-Image tag: ghcr.io/spelbryggeriet/game-box-backend:0.1.1
+### Changed
+
+- Backend server now binds to `0.0.0.0:8080` in release mode.
 
 ## [0.1.1] - 2023-01-03
+
+Image tag: ghcr.io/spelbryggeriet/game-box-backend:0.1.1
 
 ### Changed
 
