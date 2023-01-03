@@ -10,6 +10,7 @@ on:
     - '.github/**'
     - '!.github/workflows/test.yml'
     - 'Dockerfile'
+    - 'hocfile.yaml'
     - 'frontend/index.html'
   pull_request:
     branches: [ master ]
@@ -20,6 +21,7 @@ on:
     - '.github/**'
     - '!.github/workflows/test.yml'
     - 'Dockerfile'
+    - 'hocfile.yaml'
     - 'frontend/index.html'
 
 env:
