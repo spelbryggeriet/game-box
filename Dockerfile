@@ -38,9 +38,6 @@ RUN cargo build --release --target aarch64-unknown-linux-gnu
 ###############################################################################
 FROM rust:1.66 as build-frontend
 
-# Install trunk command
-RUN cargo install trunk@0.16.0
-
 # Create a new empty project for the backend
 RUN USER=root cargo new --bin frontend
 WORKDIR /frontend
@@ -54,11 +51,14 @@ COPY ./frontend/index.html ./index.html
 RUN rustup target add wasm32-unknown-unknown
 
 # Build only the dependencies to cache them
-RUN trunk build --release
+RUN cargo build --release --target wasm32-unknown-unknown
 RUN rm src/*.rs
 
 # Copy the source code
 COPY ./frontend/src ./src
+
+# Install trunk command
+RUN cargo install trunk@0.16.0
 
 # Build for release
 RUN rm ./target/wasm32-unknown-unknown/release/deps/game_box_frontend*
