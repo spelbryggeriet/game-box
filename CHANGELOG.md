@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.5] - 2023-01-04
+
+Image tag: ghcr.io/spelbryggeriet/game-box-backend:0.1.5
+
 ### Added
 
 - Firefox support.
