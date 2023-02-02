@@ -8,5 +8,5 @@ dioxus = { version = "0.2.4", features = ["web"] }
 getrandom = { version = "0.2.8", features = ["js"] }
 im = "15.1.0"
 rand = "0.8.5"
-wasm-bindgen = "0.2.83"
+wasm-bindgen = "0.2.84"
 web-sys = "0.3.60"
