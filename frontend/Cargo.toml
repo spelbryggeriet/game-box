@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 dioxus = { version = "0.2.4", features = ["web"] }
-getrandom = { version = "0.2.8", features = ["js"] }
+getrandom = { version = "0.2.9", features = ["js"] }
 im = "15.1.0"
 rand = "0.8.5"
 wasm-bindgen = "0.2.83"
